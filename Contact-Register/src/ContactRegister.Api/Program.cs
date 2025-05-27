@@ -4,6 +4,7 @@ using ContactRegister.Infrastructure;
 using ContactRegister.Infrastructure.Cache;
 using ContactRegister.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Prometheus;
 
 public class Program
@@ -12,8 +13,6 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add services to the container.
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
         builder.Services.AddControllers();
@@ -26,28 +25,31 @@ public class Program
         builder.Services.AddMetrics();
         builder.Services.UseHttpClientMetrics();
 
+		builder.Services.AddHealthChecks()
+	        .AddCheck("health", () => HealthCheckResult.Healthy("Aplicação funcionando normalmente"));
 
-        var app = builder.Build();
+		var app = builder.Build();
 
-        if (app.Environment.IsEnvironment("Testing"))
-        {
-            var dbContext = app.Services.GetRequiredService<AppDbContext>();
-            dbContext.Database.Migrate();
-        }
+		using var scope = app.Services.CreateScope();
+		using var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+		if (context.Database.GetPendingMigrations().Any())
+		{
+			context.Database.Migrate();
+		}
 
-        app.UseSwagger();
+		app.UseSwagger();
         app.UseSwaggerUI();
 
-        // Configure the HTTP request pipeline.
         app.UseRouting();
-        app.UseHttpMetrics(); // Exposes /metrics
+        app.UseHttpMetrics();
         app.UseMetricServer();
         app.UseHttpMetrics();
 
         app.MapControllers();
         app.MapMetrics();
+		app.MapHealthChecks("/health");
 
-        app.UseHttpsRedirection();
+		app.UseHttpsRedirection();
 
         app.Run();
     }

@@ -17,8 +17,7 @@ public class TestContainerContactRegisterFactory : WebApplicationFactory<Program
     private readonly MsSqlContainer _msSqlContainer = new MsSqlBuilder()
         .WithName($"sql-server-test-{Guid.NewGuid()}")
         .WithImage("mcr.microsoft.com/mssql/server:2022-latest")
-        .WithPortBinding("1433", "1433")
-        .WithPassword("Password123")
+		.WithPassword("Password@1234")
         .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(1433))
         .Build();
     
@@ -34,8 +33,8 @@ public class TestContainerContactRegisterFactory : WebApplicationFactory<Program
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        builder.UseEnvironment("Testing");
-        builder.ConfigureTestServices(services =>
+		builder.UseEnvironment("Testing");
+		builder.ConfigureTestServices(services =>
         {
             var descriptor = services.SingleOrDefault(
                 d => d.ServiceType == typeof(DbContextOptions<AppDbContext>));

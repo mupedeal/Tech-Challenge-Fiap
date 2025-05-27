@@ -1,0 +1,13 @@
+FROM debian:bullseye-slim
+
+RUN apt-get update && apt-get install -y curl wget ca-certificates
+
+RUN wget https://dl.grafana.com/enterprise/release/grafana-enterprise-12.0.1.linux-amd64.tar.gz && \
+    tar -zxvf grafana-enterprise-12.0.1.linux-amd64.tar.gz && \
+    mv grafana-v12.0.1 /grafana
+
+WORKDIR /grafana
+
+EXPOSE 3000
+
+CMD ["./bin/grafana-server", "web"]
