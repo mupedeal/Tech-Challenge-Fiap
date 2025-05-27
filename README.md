@@ -115,7 +115,7 @@ You can connect to the SQL Server instance using SQL Server Management Studio (S
 
 - **Server**: `localhost:1433`
 - **Username**: `sa`
-- **Password**: `Password123`
+- **Password**: `Password@1234`
 
 Ensure that the SQL client is configured to allow connections to localhost on port 1433.
 

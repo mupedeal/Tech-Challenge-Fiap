@@ -1,11 +1,8 @@
-﻿using ContactRegister.Tests.IntegrationTests.InMemory.Setup;
-using Microsoft.AspNetCore.Mvc.Testing;
+﻿using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
-using Xunit;
 
 namespace ContactRegister.Tests.IntegrationTests.Common
 {
-    [Collection(nameof(ApiCollectionFixture))]
     public abstract class BaseIntegrationTests : IDisposable
     {
         private IServiceScope? _scoped;

@@ -1,30 +1,9 @@
-﻿version: '3.9'
-
-services:
-  api:
-    build:
-      context: .
-      dockerfile: src/ContactRegister.Api/Dockerfile
-    ports:
-      - '${APP_PORT:-8080}:${APP_INTERNAL_PORT:-8080}'
-    depends_on:
-      - sqlserver
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Server=sqlserver;User Id=sa;Password=Password123;TrustServerCertificate=True;
-      - ASPNETCORE_HTTP_PORTS=${APP_INTERNAL_PORT:-8080}
-      - DOTNET_METRICS_EXPORTER=prometheus 
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:${APP_INTERNAL_PORT:-8080}/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
+﻿services:
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-CU17-ubuntu-22.04
     environment:
       - ACCEPT_EULA=Y
-      - MSSQL_SA_PASSWORD=Password123
+      - MSSQL_SA_PASSWORD=Password@1234
     ports:
       - '${DB_PORT:-1433}:1433'
     volumes:
@@ -33,28 +12,53 @@ services:
       test:
         [
           'CMD-SHELL',
-          "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P Password123 -Q 'SELECT 1'",
+          "/opt/mssql-tools18/bin/sqlcmd -S sqlserver -U sa -P Password@1234 -N -C -Q 'SELECT 1'",
         ]
-      interval: 10s
-      timeout: 5s
+      interval: 30s
+      timeout: 10s
       retries: 5
 
+  api:
+    build:
+      context: .
+      dockerfile: src/ContactRegister.Api/Dockerfile
+    ports:
+      - '${APP_PORT:-8080}:${APP_INTERNAL_PORT:-8080}'
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;User Id=sa;Password=Password@1234;TrustServerCertificate=True;
+      - ASPNETCORE_HTTP_PORTS=${APP_INTERNAL_PORT:-8080}
+      - DOTNET_METRICS_EXPORTER=prometheus 
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://api:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
   prometheus:
-    image: prom/prometheus
+    build:
+      context: .
+      dockerfile: Dockerfile.prometheus
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "${PROMETHEUS_PORT:-9090}:9090"
     depends_on:
-      - api
+      api:
+        condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9090/-/healthy"]
+      test: ["CMD", "curl", "-f", "http://prometheus:9090/-/healthy"]
       interval: 30s
       timeout: 10s
       retries: 3
 
   grafana:
-    image: grafana/grafana
+    build:
+      context: .
+      dockerfile: Dockerfile.grafana  # Caminho para o Dockerfile customizado
     ports:
       - "${GRAFANA_PORT:-3000}:3000"
     environment:
@@ -62,9 +66,10 @@ services:
     volumes:
       - grafana-data:/var/lib/grafana
     depends_on:
-      - prometheus
+      prometheus:
+        condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
       interval: 30s
       timeout: 10s
       retries: 3
