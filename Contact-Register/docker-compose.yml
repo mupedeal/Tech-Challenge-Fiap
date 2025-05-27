@@ -18,12 +18,12 @@
       timeout: 10s
       retries: 5
 
-  api:
+  read-contact-api:
     build:
       context: .
-      dockerfile: src/ContactRegister.Api/Dockerfile
+      dockerfile: src/ContactRegister.Api.ReadContact/Dockerfile
     ports:
-      - '${APP_PORT:-8080}:${APP_INTERNAL_PORT:-8080}'
+      - '${APP_PORT_READ_CONTACT:-8081}:${APP_INTERNAL_PORT:-8080}'
     depends_on:
       sqlserver:
         condition: service_healthy
@@ -33,7 +33,29 @@
       - ASPNETCORE_HTTP_PORTS=${APP_INTERNAL_PORT:-8080}
       - DOTNET_METRICS_EXPORTER=prometheus 
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://api:8080/health"]
+      test: ["CMD", "curl", "-f", "http://read-contact-api:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  write-contact-api:
+    build:
+      context: .
+      dockerfile: src/ContactRegister.Api.WriteContact/Dockerfile
+    ports:
+      - '${APP_PORT_WRITE_CONTACT:-8082}:${APP_INTERNAL_PORT:-8080}'
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+      read-contact-api:
+        condition: service_healthy
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;User Id=sa;Password=Password@1234;TrustServerCertificate=True;
+      - ASPNETCORE_HTTP_PORTS=${APP_INTERNAL_PORT:-8080}
+      - DOTNET_METRICS_EXPORTER=prometheus 
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://write-contact-api:8080/health"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -47,7 +69,9 @@
     ports:
       - "${PROMETHEUS_PORT:-9090}:9090"
     depends_on:
-      api:
+      read-contact-api:
+        condition: service_healthy
+      write-contact-api:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://prometheus:9090/-/healthy"]
@@ -58,7 +82,7 @@
   grafana:
     build:
       context: .
-      dockerfile: Dockerfile.grafana  # Caminho para o Dockerfile customizado
+      dockerfile: Dockerfile.grafana
     ports:
       - "${GRAFANA_PORT:-3000}:3000"
     environment:
@@ -69,10 +93,10 @@
       prometheus:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      test: ["CMD", "curl", "-f", "http://grafana:3000/api/health"]
       interval: 30s
       timeout: 10s
-      retries: 3
+      retries: 5
 
 volumes:
   sqlserverdata:

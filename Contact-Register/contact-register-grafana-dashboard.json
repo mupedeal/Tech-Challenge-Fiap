@@ -803,8 +803,8 @@
       },
       {
         "current": {
-          "text": "contact-register-api-1:8080",
-          "value": "contact-register-api-1:8080"
+          "text": "contact-register-read-contact-api-1:8080",
+          "value": "contact-register-read-contact-api-1:8080"
         },
         "datasource": {
           "type": "prometheus",

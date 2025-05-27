@@ -8,12 +8,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\shared\ContactRegister.Shared\ContactRegister.Shared.csproj" />
-      <ProjectReference Include="..\..\src\ContactRegister.Api\ContactRegister.Api.csproj" />
-      <ProjectReference Include="..\..\src\ContactRegister.Application\ContactRegister.Application.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
       <PackageReference Include="FluentAssertions" Version="[7.2.0]" /> <!--A partir da versão 8.X.X é pago--> 
       <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.13" />
       <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
@@ -26,6 +20,11 @@
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\shared\ContactRegister.Shared\ContactRegister.Shared.csproj" />
+      <ProjectReference Include="..\..\src\ContactRegister.Application\ContactRegister.Application.csproj" />
     </ItemGroup>
 
 </Project>
