@@ -32,11 +32,11 @@ public class ContactService : IContactService
         {
             var contact = contactInput.ToDto();
 
-			var ddd = await _dddService.GetDddByCode(contact.Ddd?.Code ?? 0);
+			var ddd = await _dddService.GetDddByCode(contact.Ddd);
 
             if (ddd.IsError) return ddd.Errors;
 
-            contact.Ddd = ddd.Value;
+            contact.Ddd = ddd.Value!.ToDdd().Code;
 
 			var contactEntity = contact.ToContact();
 
@@ -97,7 +97,7 @@ public class ContactService : IContactService
             if (!string.IsNullOrEmpty(firstName)) { contactsQuery = contactsQuery.Where(c => c.FirstName.Contains(firstName, StringComparison.OrdinalIgnoreCase)); }
             if (!string.IsNullOrEmpty(lastName)) { contactsQuery = contactsQuery.Where(c => c.LastName.Contains(lastName, StringComparison.OrdinalIgnoreCase)); }
             if (!string.IsNullOrEmpty(email)) { contactsQuery = contactsQuery.Where(c => c.Email.Contains(email, StringComparison.OrdinalIgnoreCase)); }
-            if (dddCode > 0) { contactsQuery = contactsQuery.Where(c => c.Ddd.Code == dddCode); }
+            if (dddCode > 0) { contactsQuery = contactsQuery.Where(c => c.Ddd == dddCode); }
             if (!string.IsNullOrEmpty(city)) { contactsQuery = contactsQuery.Where(c => c.Address.City.Contains(city, StringComparison.OrdinalIgnoreCase)); }
             if (!string.IsNullOrEmpty(state)) { contactsQuery = contactsQuery.Where(c => c.Address.State.Contains(state, StringComparison.OrdinalIgnoreCase)); }
             if (!string.IsNullOrEmpty(postalCode)) { contactsQuery = contactsQuery.Where(c => c.Address.PostalCode.Contains(postalCode, StringComparison.OrdinalIgnoreCase)); }
@@ -134,11 +134,11 @@ public class ContactService : IContactService
             targetContact.LastName = contact.LastName;
             targetContact.Email = contact.Email;
 
-			var ddd = await _dddService.GetDddByCode(contact.Ddd?.Code ?? 0);
+			var ddd = await _dddService.GetDddByCode(contact.Ddd);
 
 			if (ddd.IsError) return ddd.Errors;
 			
-			targetContact.Ddd = ddd.Value!.ToDdd();
+			targetContact.Ddd = ddd.Value!.ToDdd().Code;
 
 			if (!targetContact.Validate(out var errors))
             {

@@ -1,8 +1,8 @@
-﻿using ContactRegister.Application.DTOs.BrasilApiDTOs;
-using ContactRegister.Application.Interfaces.Services;
+﻿using ContactRegister.Application.Ddd.Dtos.BrasilApiDtos;
+using ContactRegister.Application.Ddd.Interfaces.Services;
 using System.Text.Json;
 
-namespace ContactRegister.Application.Services;
+namespace ContactRegister.Application.Ddd.Services;
 
 public class BrasilApiService(IHttpClientFactory clientFactory) : IDddApiService
 {
@@ -14,8 +14,8 @@ public class BrasilApiService(IHttpClientFactory clientFactory) : IDddApiService
 		var response = await client.GetAsync($"/api/ddd/v1/{code}");
 		var responseContent = await response.Content.ReadAsStringAsync();
 
-		return response.IsSuccessStatusCode ? 
-			new DddApiResponseDto(JsonSerializer.Deserialize<DddApiSuccessResponseDto>(responseContent), null) : 
+		return response.IsSuccessStatusCode ?
+			new DddApiResponseDto(JsonSerializer.Deserialize<DddApiSuccessResponseDto>(responseContent), null) :
 			new DddApiResponseDto(null, JsonSerializer.Deserialize<DddApiErrorResponseDto>(responseContent));
 	}
 }

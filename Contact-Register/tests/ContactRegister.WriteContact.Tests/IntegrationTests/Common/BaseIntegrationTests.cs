@@ -1,15 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
+using ContactProgram = ContactRegister.Api.WriteContact.Program;
 
 namespace ContactRegister.WriteContact.Tests.IntegrationTests.Common;
 
 public abstract class BaseIntegrationTests : IDisposable
 {
 	private IServiceScope? _scoped;
-	private readonly WebApplicationFactory<Program> _factory;
+	private readonly WebApplicationFactory<ContactProgram> _factory;
 	private readonly HttpClient _client;
 
-	protected BaseIntegrationTests(WebApplicationFactory<Program> factory)
+	protected BaseIntegrationTests(WebApplicationFactory<ContactProgram> factory)
 	{
 		_factory = factory;
 		_client = _factory.CreateClient();

@@ -8,5 +8,6 @@ scrape_configs:
       - targets: 
           [
             'contact-register-read-contact-api-1:8080',
-            'contact-register-write-contact-api-1:8080'            
+            'contact-register-write-contact-api-1:8080',
+            'contact-register-ddd-api-1:8080'
           ]

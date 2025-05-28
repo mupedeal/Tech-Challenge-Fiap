@@ -1,22 +1,27 @@
-using ContactRegister.Domain.Entities.Abstractions;
-
 namespace ContactRegister.Domain.Entities;
 
-public class Ddd : AbstractEntity<int>
+public class Ddd
 {
-    public int Code { get; set; }
+	public string Id { get; set; } = Guid.NewGuid().ToString();
+	public DateTime CreatedAt { get; set; }
+	public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+	public int Code { get; set; }
 	public string State { get; set; }
 	public string Region { get; set; }
-    public virtual ICollection<Contact> Contacts { get; set; } = new List<Contact>();
+	public string PartitionKey { get; set; }
 
-	public Ddd() { }
+	public Ddd()
+	{
+		PartitionKey = Code.ToString();
+	}
     
     public Ddd(int code, string state, string region)
     {
         Code = code;
         State = state;
         Region = region;
-    }
+		PartitionKey = Code.ToString();
+	}
 
 	public bool Validate(out IList<string> errors)
 	{

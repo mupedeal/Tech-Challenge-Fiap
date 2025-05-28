@@ -36,9 +36,9 @@ namespace ContactRegister.Infrastructure.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("created_at");
 
-                    b.Property<int>("DddId")
+                    b.Property<int>("Ddd")
                         .HasColumnType("int")
-                        .HasColumnName("ddd_id");
+                        .HasColumnName("ddd");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -110,59 +110,7 @@ namespace ContactRegister.Infrastructure.Migrations
                     b.HasKey("Id")
                         .HasName("id");
 
-                    b.HasIndex("DddId");
-
                     b.ToTable("tb_contact", (string)null);
-                });
-
-            modelBuilder.Entity("ContactRegister.Domain.Entities.Ddd", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Code")
-                        .HasColumnType("int")
-                        .HasColumnName("code");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("created_at");
-
-                    b.Property<string>("Region")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("region");
-
-                    b.Property<string>("State")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("state");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("updated_at");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Code")
-                        .IsUnique();
-
-                    b.ToTable("tb_ddd", (string)null);
-                });
-
-            modelBuilder.Entity("ContactRegister.Domain.Entities.Contact", b =>
-                {
-                    b.HasOne("ContactRegister.Domain.Entities.Ddd", "DddCode")
-                        .WithMany()
-                        .HasForeignKey("DddId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("DddCode");
                 });
 #pragma warning restore 612, 618
         }

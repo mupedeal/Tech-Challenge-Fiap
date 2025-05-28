@@ -9,8 +9,7 @@ public class Contact : AbstractEntity<int>
     public string LastName { get; set; }
     public string Email { get; set; }
     public Address Address { get; set; }
-    public int DddId { get; set; }
-    public Ddd Ddd { get; set; } = default!;
+    public int Ddd { get; set; }
     public Phone HomeNumber { get; set; }
     public Phone MobileNumber { get; set; }
 
@@ -22,7 +21,7 @@ public class Contact : AbstractEntity<int>
         Address address,
         Phone homeNumber,
         Phone mobileNumber,
-        Ddd ddd)
+        int ddd)
     {
         FirstName = firstName;
         LastName = lastName;
@@ -37,7 +36,7 @@ public class Contact : AbstractEntity<int>
         string firstName,
         string lastName,
         string email,
-        Ddd ddd,
+        int ddd,
         Address address,
         Phone? homeNumber,
         Phone? mobileNumber)
@@ -73,9 +72,9 @@ public class Contact : AbstractEntity<int>
         return result;
     }
 
-	private bool ValidateDdd(Ddd? ddd)
+	private bool ValidateDdd(int? ddd)
 	{
-		return ddd != null;
+		return ddd != null && ddd > 10 && ddd < 100 && ddd % 10 > 0;
 	}
 
 	private bool ValidatePhones(Phone? home, Phone? mobile)

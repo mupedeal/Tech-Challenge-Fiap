@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Prometheus;
 
+namespace ContactRegister.Api.ReadContact;
+
 public class Program
 {
 	public static void Main(string[] args)
@@ -18,7 +20,7 @@ public class Program
 		builder.Services.AddControllers();
 		builder.Services.AddMemoryCache();
 		builder.Services.AddTransient<ICacheService, MemCacheService>();
-		builder.Services.AddApplication();
+		builder.Services.AddApplication(builder.Configuration);
 		builder.Services.AddInfrastructure(builder.Configuration);
 		builder.Services.AddMemoryCache();
 

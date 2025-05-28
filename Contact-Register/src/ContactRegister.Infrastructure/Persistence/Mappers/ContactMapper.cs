@@ -17,7 +17,7 @@ public class ContactMapper : IEntityTypeConfiguration<Contact>
         builder.Property(x => x.Email).HasColumnName("email");
         builder.Property(x => x.CreatedAt).HasColumnName("created_at");
         builder.Property(x => x.UpdatedAt).HasColumnName("updated_at");
-        builder.Property(x => x.DddId).HasColumnName("ddd_id");
+        builder.Property(x => x.Ddd).HasColumnName("ddd");
         
         #region Address
         
@@ -58,15 +58,5 @@ public class ContactMapper : IEntityTypeConfiguration<Contact>
             .IsRequired();
 
 		#endregion
-
-		#region Navigations
-
-		builder
-			.HasOne(c => c.Ddd)
-            .WithMany(d => d.Contacts)
-            .HasForeignKey(x => x.DddId)
-            .IsRequired();
-        
-        #endregion
     }
 }

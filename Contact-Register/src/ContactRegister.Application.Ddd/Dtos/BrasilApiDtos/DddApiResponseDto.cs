@@ -1,4 +1,4 @@
-﻿namespace ContactRegister.Application.DTOs.BrasilApiDTOs;
+﻿namespace ContactRegister.Application.Ddd.Dtos.BrasilApiDtos;
 
 public class DddApiResponseDto
 {

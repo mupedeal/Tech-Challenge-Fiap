@@ -1,6 +1,0 @@
-@ContactRegister.Api.Ddd_HostAddress = http://localhost:5204
-
-GET {{ContactRegister.Api.Ddd_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

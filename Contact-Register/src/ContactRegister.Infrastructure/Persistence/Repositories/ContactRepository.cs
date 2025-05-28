@@ -17,25 +17,22 @@ public class ContactRepository : IContactRepository
     
     public async Task AddContactAsync(Contact contact)
     {
-        contact.Ddd = await _context.ddds.FirstAsync(ddd => ddd.Code == contact.Ddd.Code);
 		_ = await _contacts.AddAsync(contact);
         _ = await _context.SaveChangesAsync();
     }
 
     public async Task<Contact?> GetContactByIdAsync(int id)
     {
-        return await _contacts.Include(c => c.Ddd).FirstOrDefaultAsync(c => c.Id == id);
+        return await _contacts.FirstOrDefaultAsync(c => c.Id == id);
     }
 
     public async Task<IEnumerable<Contact>> GetContactsAsync()
     {
-        return await _contacts.Include(e => e.Ddd).ToListAsync();
+        return await _contacts.ToListAsync();
     }
 
     public async Task UpdateContactAsync(Contact contact)
     {
-		contact.Ddd = await _context.ddds.FirstAsync(ddd => ddd.Code == contact.Ddd.Code);
-        contact.DddId = contact.Ddd.Id;
 		_contacts.Update(contact);
         _ = await _context.SaveChangesAsync();
     }
@@ -48,7 +45,6 @@ public class ContactRepository : IContactRepository
 
     public async Task<List<Contact>> GetContactsByDdd(int[] codes) =>
         await _contacts
-            .Include(c => c.Ddd)
-            .Where(c => codes.Contains(c.Ddd.Code))
+            .Where(c => codes.Contains(c.Ddd))
             .ToListAsync();
 }

@@ -14,22 +14,22 @@ namespace ContactRegister.ReadContact.Tests.IntegrationTests.TestContainers.Test
 public class ContactTest : BaseIntegrationTests, IClassFixture<TestContainerContactRegisterFactory>
 {
 	private readonly string resource = "/Contact";
-	public ContactTest(TestContainerContactRegisterFactory factory) : base(factory)
+	public ContactTest(TestContainerContactRegisterFactory testContainerFactory) : base(testContainerFactory)
 	{
-		var context = factory.Services.GetRequiredService<AppDbContext>();
-		if (context.Database.GetPendingMigrations().Any())
-			context.Database.Migrate();
+		var testContainerContext = testContainerFactory.Services.GetRequiredService<AppDbContext>();
+		if (testContainerContext.Database.GetPendingMigrations().Any())
+			testContainerContext.Database.Migrate();
 	}
 
 	[Fact]
 	public async Task GetContactShouldReturnContactDto()
 	{
 		// Arrange
-		var client = GetClient();
+		var contactClient = GetContactClient();
 		int request = 1;
 
 		// Act
-		var response = await client.GetAsync($"{resource}/GetContact/{request}");
+		var response = await contactClient.GetAsync($"{resource}/GetContact/{request}");
 
 		// Assert
 		response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -41,16 +41,16 @@ public class ContactTest : BaseIntegrationTests, IClassFixture<TestContainerCont
 	public async Task GetContactsByDddCodes_ShouldReturn_List()
 	{
 		// Arrange
-		var client = GetClient();
+		var contactClient = GetContactClient();
 		int[] request = [68];
 
 		// Act
-		var response = await client.PostAsJsonAsync($"{resource}/GetContactsByDddCodes", request);
+		var response = await contactClient.PostAsJsonAsync($"{resource}/GetContactsByDddCodes", request);
 
 		// Assert
 		response.StatusCode.Should().Be(HttpStatusCode.OK);
 		var contactDtos = await response.Content.ReadFromJsonAsync<List<ContactDto>>();
 		contactDtos?.Should().NotBeEmpty();
-		contactDtos?.Should().Contain(c => c.Ddd!.Code == request[0]);
+		contactDtos?.Should().Contain(c => c.Ddd == request[0]);
 	}
 }

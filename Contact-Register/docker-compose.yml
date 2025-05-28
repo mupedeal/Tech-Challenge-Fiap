@@ -32,8 +32,27 @@
       - ConnectionStrings__DefaultConnection=Server=sqlserver;User Id=sa;Password=Password@1234;TrustServerCertificate=True;
       - ASPNETCORE_HTTP_PORTS=${APP_INTERNAL_PORT:-8080}
       - DOTNET_METRICS_EXPORTER=prometheus 
+      - DddApiBaseAddress=http://ddd-api:8080
     healthcheck:
       test: ["CMD", "curl", "-f", "http://read-contact-api:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  ddd-api:
+    build:
+      context: .
+      dockerfile: src/ContactRegister.Api.Ddd/Dockerfile
+    ports:
+      - '${APP_PORT_DDD:-8083}:${APP_INTERNAL_PORT:-8080}'
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - CosmosConnection__ConnectionString=AccountEndpoint=https://sodre-integracao-db.documents.azure.com:443/;AccountKey=SnmfIORoa4jddPH7STzs6pIiEK9hhcD2y33BOHpNvL2xTk0kblUy0h8CXmN7T0xyd4uucuMmDxHBACDbNRdtTg==;
+      - CosmosConnection__Database=DevelopmentDatabase
+      - ASPNETCORE_HTTP_PORTS=${APP_INTERNAL_PORT:-8080}
+      - DOTNET_METRICS_EXPORTER=prometheus 
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://ddd-api:8080/health"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -47,13 +66,16 @@
     depends_on:
       sqlserver:
         condition: service_healthy
+      ddd-api:
+        condition: service_healthy
       read-contact-api:
         condition: service_healthy
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DefaultConnection=Server=sqlserver;User Id=sa;Password=Password@1234;TrustServerCertificate=True;
       - ASPNETCORE_HTTP_PORTS=${APP_INTERNAL_PORT:-8080}
-      - DOTNET_METRICS_EXPORTER=prometheus 
+      - DOTNET_METRICS_EXPORTER=prometheus
+      - DddApiBaseAddress=http://ddd-api:8080
     healthcheck:
       test: ["CMD", "curl", "-f", "http://write-contact-api:8080/health"]
       interval: 30s
@@ -69,6 +91,8 @@
     ports:
       - "${PROMETHEUS_PORT:-9090}:9090"
     depends_on:
+      ddd-api:
+        condition: service_healthy
       read-contact-api:
         condition: service_healthy
       write-contact-api:

@@ -1,10 +1,13 @@
-﻿using ContactRegister.Application.Inputs;
+﻿using ContactRegister.Application.DTOs;
+using ContactRegister.Application.Inputs;
 using ContactRegister.Infrastructure.Persistence;
 using ContactRegister.WriteContact.Tests.IntegrationTests.Common;
 using ContactRegister.WriteContact.Tests.IntegrationTests.TestContainers.Factories;
+using ErrorOr;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using System.Net;
 using System.Net.Http.Json;
 using Xunit;
@@ -14,17 +17,30 @@ namespace ContactRegister.WriteContact.Tests.IntegrationTests.TestContainers.Tes
 public class ContactTest : BaseIntegrationTests, IClassFixture<TestContainerContactRegisterFactory>
 {
 	private readonly string resource = "/Contact";
-	public ContactTest(TestContainerContactRegisterFactory factory) : base(factory)
+	private readonly TestContainerContactRegisterFactory _testContainerFactory;
+	private readonly DddDto _dddDto;
+
+	public ContactTest(TestContainerContactRegisterFactory testContainerFactory) : base(testContainerFactory)
 	{
-		var context = factory.Services.GetRequiredService<AppDbContext>();
-		if (context.Database.GetPendingMigrations().Any())
-			context.Database.Migrate();
+		_testContainerFactory = testContainerFactory;
+
+		var testContainerContext = testContainerFactory.Services.GetRequiredService<AppDbContext>();
+		if (testContainerContext.Database.GetPendingMigrations().Any())
+			testContainerContext.Database.Migrate();
+
+		_dddDto = new DddDto
+		{
+			Code = 21,
+			State = "RJ",
+			Region = "TERESÓPOLIS, TANGUÁ,SEROPÉDICA, SÃO JOÃO DE MERITI, SÃO GONÇALO, RIO DE JANEIRO, RIO BONITO, QUEIMADOS, PARACAMBI, NOVA IGUAÇU, NITERÓI, NILÓPOLIS, MESQUITA, MARICÁ, MANGARATIBA, MAGÉ, JAPERI, ITAGUAÍ, ITABORAÍ, GUAPIMIRIM, DUQUE DE CAXIAS, CACHOEIRAS DE MACACU, BELFORD ROXO"
+		};
 	}
 
 	[Fact(DisplayName = "Create simple contact")]
 	public async Task Contact_ShouldBe_Created()
 	{
 		// Arrange
+		_testContainerFactory.DddServiceMock.Setup(x => x.GetDddByCode(It.IsAny<int>())).ReturnsAsync(_dddDto);
 		var client = GetClient();
 		var request = new ContactInput
 		{
@@ -56,6 +72,7 @@ public class ContactTest : BaseIntegrationTests, IClassFixture<TestContainerCont
 	public async Task CreateContact_ShouldReturn_OK()
 	{
 		// Arrange
+		_testContainerFactory.DddServiceMock.Setup(x => x.GetDddByCode(It.IsAny<int>())).ReturnsAsync(_dddDto);
 		var client = GetClient();
 		var request = new ContactInput
 		{
@@ -87,6 +104,7 @@ public class ContactTest : BaseIntegrationTests, IClassFixture<TestContainerCont
 	public async Task CreateContact_ShouldReturn_BadRequest()
 	{
 		// Arrange
+		_testContainerFactory.DddServiceMock.Setup(x => x.GetDddByCode(It.IsAny<int>())).ReturnsAsync(Error.Failure());
 		var client = GetClient();
 		var request = new ContactInput();
 
@@ -102,6 +120,7 @@ public class ContactTest : BaseIntegrationTests, IClassFixture<TestContainerCont
 	public async Task UpdateContact_ShouldReturn_NoContent()
 	{
 		// Arrange
+		_testContainerFactory.DddServiceMock.Setup(x => x.GetDddByCode(It.IsAny<int>())).ReturnsAsync(_dddDto);
 		var client = GetClient();
 		int requestId = 2;
 		ContactInput requestBody = new()
@@ -119,7 +138,7 @@ public class ContactTest : BaseIntegrationTests, IClassFixture<TestContainerCont
 			},
 			HomeNumber = "11111111",
 			MobileNumber = "922222222",
-			Ddd = 68
+			Ddd = 21
 		};
 
 		// Act

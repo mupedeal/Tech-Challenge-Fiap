@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace ContactRegister.Application.DTOs.BrasilApiDTOs;
+namespace ContactRegister.Application.Ddd.Dtos.BrasilApiDtos;
 
 public class DddApiErrorResponseDto
 {
