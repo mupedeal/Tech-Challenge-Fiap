@@ -22,7 +22,6 @@ public static class DependencyInjection
 
     private static IServiceCollection AddServices(this IServiceCollection services)
     {
-        services.AddScoped<IDddRepository, DddRepository>();
         services.AddScoped<IContactRepository, ContactRepository>();
         
         return services;

@@ -8,7 +8,6 @@ namespace ContactRegister.Infrastructure.Persistence;
 public class AppDbContext : DbContext
 {
     public DbSet<Contact> contacts { get; set; }
-    public DbSet<Ddd> ddds { get; set; }
     
     public AppDbContext() { }
     

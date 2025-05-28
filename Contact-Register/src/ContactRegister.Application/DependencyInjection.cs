@@ -1,22 +1,26 @@
 using ContactRegister.Application.Interfaces.Services;
 using ContactRegister.Application.Services;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Polly.Extensions.Http;
 using Polly;
+using Polly.Extensions.Http;
 
 namespace ContactRegister.Application;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddApplication(this IServiceCollection services)
+    public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddScoped<IDddService, DddService>();
         services.AddScoped<IContactService, ContactService>();
-		services.AddHttpClient("BrasilApi", o =>
+
+		string dddApiBaseAddress = configuration.GetValue<string>("DddApiBaseAddress") ?? throw new ArgumentException("Variável 'DddApiBaseAddress' não configurada.");
+
+		services.AddHttpClient("DddApi", o =>
 		{
-			o.BaseAddress = new Uri("https://brasilapi.com.br");
+			o.BaseAddress = new Uri(dddApiBaseAddress);
 		}).SetHandlerLifetime(TimeSpan.FromMinutes(5)).AddPolicyHandler(GetRetryPolicy());
-		services.AddScoped<IDddApiService, BrasilApiService>();
+
+		services.AddScoped<IDddService, DddService>();
 
 		return services;
     }

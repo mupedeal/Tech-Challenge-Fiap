@@ -61,16 +61,7 @@ public class ContactServiceTests
 			Address = new Address("5a Travessa da Batalha n 330, Jordão", "", "Recife", "PE", "51260-215"),
 			HomeNumber = new Phone("(81) 2644-3282"),
 			MobileNumber = new Phone("(81) 99682-5038"),
-			DddId = 2,
-			Ddd = new Ddd
-			{
-				Id = 2,
-				CreatedAt = DateTime.UtcNow,
-				UpdatedAt = DateTime.UtcNow,
-				Code = 21,
-				State = "RJ",
-				Region = "TERESÓPOLIS, TANGUÁ,SEROPÉDICA, SÃO JOÃO DE MERITI, SÃO GONÇALO, RIO DE JANEIRO, RIO BONITO, QUEIMADOS, PARACAMBI, NOVA IGUAÇU, NITERÓI, NILÓPOLIS, MESQUITA, MARICÁ, MANGARATIBA, MAGÉ, JAPERI, ITAGUAÍ, ITABORAÍ, GUAPIMIRIM, DUQUE DE CAXIAS, CACHOEIRAS DE MACACU, BELFORD ROXO"
-			}
+			Ddd = 21
 		};
 		_allContacts = new List<Contact>
 		{
@@ -86,16 +77,7 @@ public class ContactServiceTests
 				Address = new Address("Rua da Prosa n 109, Itapuã", "", "Salvador", "BA", "41630-285"),
 				HomeNumber = new Phone("(71) 2539-7864"),
 				MobileNumber = new Phone("(71) 98538-2740"),
-				DddId = 34,
-				Ddd = new Ddd
-				{
-					Id = 34,
-					CreatedAt = DateTime.UtcNow,
-					UpdatedAt = DateTime.UtcNow,
-					Code = 68,
-					State = "AC",
-					Region = "PORTO ACRE, XAPURI, TARAUACÁ, SENA MADUREIRA, SENADOR GUIOMARD, SANTA ROSA DO PURUS, RODRIGUES ALVES, RIO BRANCO, PORTO WALTER, PLÁCIDO DE CASTRO, MARECHAL THAUMATURGO, MANOEL URBANO, MÂNCIO LIMA, JORDÃO, FEIJÓ, EPITACIOLÂNDIA, CRUZEIRO DO SUL, CAPIXABA, BUJARI, BRASILÉIA, ASSIS BRASIL, ACRELÂNDIA"
-				}
+				Ddd = 68
 			}
 		};
 	}
@@ -139,8 +121,11 @@ public class ContactServiceTests
 	public async Task AddContact_ShouldReturnError_WhenValidationFails()
 	{
 		//Arrange
-		DddDto? dddDto = null;
-		_dddServiceMock.Setup(x => x.GetDddByCode(It.IsAny<int>())).ReturnsAsync(dddDto);
+		DddDto ddd = new DddDto
+		{
+			Code = 0
+		};
+		_dddServiceMock.Setup(x => x.GetDddByCode(It.IsAny<int>())).ReturnsAsync(ddd);
 
 		//Act
 		var result = await _contactService.AddContactAsync(_contactInput);
@@ -272,7 +257,7 @@ public class ContactServiceTests
 		var contactTest = _allContacts[0];
 
 		//Act
-		var result = await _contactService.GetContactsAsync(contactTest.Ddd.Code, contactTest.FirstName, contactTest.LastName, contactTest.Email, contactTest.Address.City, contactTest.Address.State, contactTest.Address.PostalCode, contactTest.Address.AddressLine1, contactTest.Address.AddressLine2, contactTest.HomeNumber.Number, _allContacts[1].MobileNumber.Number);
+		var result = await _contactService.GetContactsAsync(contactTest.Ddd, contactTest.FirstName, contactTest.LastName, contactTest.Email, contactTest.Address.City, contactTest.Address.State, contactTest.Address.PostalCode, contactTest.Address.AddressLine1, contactTest.Address.AddressLine2, contactTest.HomeNumber.Number, _allContacts[1].MobileNumber.Number);
 
 		//Assert
 		Assert.NotNull(result.Value);

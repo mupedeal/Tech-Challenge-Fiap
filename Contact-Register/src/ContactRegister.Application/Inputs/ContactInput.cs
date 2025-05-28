@@ -10,7 +10,7 @@ public class ContactInput
 	public AddressInput Address { get; set; } = default!;
 	public string? HomeNumber { get; set; }
 	public string? MobileNumber { get; set; }
-	public int? Ddd { get; set; }
+	public int Ddd { get; set; }
 
 	public ContactDto ToDto()
 	{
@@ -22,7 +22,7 @@ public class ContactInput
 			Address = Address.ToDto(),
 			HomeNumber = HomeNumber != null ? new PhoneDto { Number = HomeNumber ?? string.Empty } : null,
 			MobileNumber = MobileNumber != null ? new PhoneDto { Number = MobileNumber ?? string.Empty } : null,
-			Ddd = Ddd != null ? new DddDto { Code = Ddd.Value } : null
+			Ddd = Ddd
 		};
 	}
 }

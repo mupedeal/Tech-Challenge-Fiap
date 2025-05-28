@@ -11,7 +11,7 @@ public class ContactDto
     public AddressDto Address { get; set; } = default!;
     public PhoneDto? HomeNumber { get; set; } = null;
     public PhoneDto? MobileNumber { get; set; } = null;
-    public DddDto? Ddd { get; set; } = null;
+    public int Ddd { get; set; }
 
     public Contact ToContact()
     {
@@ -22,7 +22,7 @@ public class ContactDto
             Address.ToAddress(),
             HomeNumber?.ToPhone(),
             MobileNumber?.ToPhone(),
-            Ddd?.ToDdd());
+            Ddd);
     }
 
     public static ContactDto FromEntity(Contact contactEntity)
@@ -35,9 +35,7 @@ public class ContactDto
             ? new PhoneDto { Number = contactEntity.MobileNumber.Number }
             : null;
 
-        var ddd = contactEntity.Ddd != null
-            ? new DddDto { Code = contactEntity.Ddd.Code, State = contactEntity.Ddd.State, Region = contactEntity.Ddd.Region }
-            : null;
+        var ddd = contactEntity.Ddd;
 
         var dto = new ContactDto
         {

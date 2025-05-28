@@ -1,11 +1,15 @@
 using ContactRegister.Domain.Entities;
+using System.Text.Json.Serialization;
 
 namespace ContactRegister.Application.DTOs;
 
 public class DddDto
 {
-    public int Code { get; set; }
+	[JsonPropertyName("code")]
+	public int Code { get; set; }
+	[JsonPropertyName("state")]
 	public string State { get; set; } = string.Empty;
+	[JsonPropertyName("region")]
 	public string Region { get; set; } = string.Empty;
 
     public Ddd ToDdd()
