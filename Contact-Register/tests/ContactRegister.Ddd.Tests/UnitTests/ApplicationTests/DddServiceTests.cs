@@ -140,7 +140,9 @@ public class DddServiceTests
 		};
 		_dddRepositoryMock.Setup(x => x.GetDddByCode(It.IsAny<int>())).ReturnsAsync(dbResult);
 		_dddApiServiceMock.Setup(x => x.GetByCode(It.IsAny<int>())).ReturnsAsync(apiResult);
-		_dddRepositoryMock.Setup(x => x.AddDdd(It.IsAny<DddEntity>())).ReturnsAsync(1).Verifiable();
+
+		var sendEndpointMock = new Mock<ISendEndpoint>();
+		_busMock.Setup(x => x.GetSendEndpoint(It.IsAny<Uri>())).ReturnsAsync(sendEndpointMock.Object);
 
 		//Act
 		var actualResult = (await _dddService.GetDddByCode(code)).Value;
