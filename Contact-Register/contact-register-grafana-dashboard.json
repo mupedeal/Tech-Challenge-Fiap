@@ -44,7 +44,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "aegc6zhggtukgd"
+        "uid": "UHpFOTwHk"
       },
       "fieldConfig": {
         "defaults": {
@@ -141,7 +141,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "aegc6zhggtukgd"
+            "uid": "UHpFOTwHk"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -156,7 +156,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "aegc6zhggtukgd"
+            "uid": "UHpFOTwHk"
           },
           "editorMode": "code",
           "expr": "histogram_quantile(0.75, sum by(le) (rate(microsoft_aspnetcore_hosting_http_server_request_duration_bucket{http_route=\"$route\", http_request_method=\"$method\"}[5m])))",
@@ -168,7 +168,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "aegc6zhggtukgd"
+            "uid": "UHpFOTwHk"
           },
           "editorMode": "code",
           "expr": "histogram_quantile(0.9, sum by(le) (rate(microsoft_aspnetcore_hosting_http_server_request_duration_bucket{http_route=\"$route\", http_request_method=\"$method\"}[5m])))",
@@ -180,7 +180,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "aegc6zhggtukgd"
+            "uid": "UHpFOTwHk"
           },
           "editorMode": "code",
           "expr": "histogram_quantile(0.95, sum by(le) (rate(microsoft_aspnetcore_hosting_http_server_request_duration_bucket{http_route=\"$route\", http_request_method=\"$method\"}[5m])))",
@@ -192,7 +192,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "aegc6zhggtukgd"
+            "uid": "UHpFOTwHk"
           },
           "editorMode": "code",
           "expr": "histogram_quantile(0.98, sum by(le) (rate(microsoft_aspnetcore_hosting_http_server_request_duration_bucket{http_route=\"$route\", http_request_method=\"$method\"}[5m])))",
@@ -204,7 +204,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "aegc6zhggtukgd"
+            "uid": "UHpFOTwHk"
           },
           "editorMode": "code",
           "expr": "histogram_quantile(0.99, sum by(le) (rate(microsoft_aspnetcore_hosting_http_server_request_duration_bucket{http_route=\"$route\", http_request_method=\"$method\"}[5m])))",
@@ -216,7 +216,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "aegc6zhggtukgd"
+            "uid": "UHpFOTwHk"
           },
           "editorMode": "code",
           "expr": "histogram_quantile(0.999, sum by(le) (rate(microsoft_aspnetcore_hosting_http_server_request_duration_bucket{http_route=\"$route\", http_request_method=\"$method\"}[5m])))",
@@ -232,7 +232,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "aegc6zhggtukgd"
+        "uid": "UHpFOTwHk"
       },
       "description": "",
       "fieldConfig": {
@@ -375,7 +375,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "aegc6zhggtukgd"
+            "uid": "UHpFOTwHk"
           },
           "editorMode": "code",
           "expr": "sum(rate(microsoft_aspnetcore_hosting_http_server_request_duration_count{http_route=\"$route\", http_request_method=\"$method\", http_response_status_code=~\"4..|5..\"}[5m]) or vector(0)) / sum(rate(microsoft_aspnetcore_hosting_http_server_request_duration_count{http_route=\"$route\", http_request_method=\"$method\"}[5m]))",
@@ -386,7 +386,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "aegc6zhggtukgd"
+            "uid": "UHpFOTwHk"
           },
           "editorMode": "code",
           "expr": "sum(rate(microsoft_aspnetcore_hosting_http_server_request_duration_count{http_route=\"$route\", http_request_method=\"$method\", http_response_status_code=~\"4..\"}[5m]) or vector(0)) / sum(rate(microsoft_aspnetcore_hosting_http_server_request_duration_count{http_route=\"$route\", http_request_method=\"$method\"}[5m]))",
@@ -398,7 +398,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "aegc6zhggtukgd"
+            "uid": "UHpFOTwHk"
           },
           "editorMode": "code",
           "expr": "sum(rate(microsoft_aspnetcore_hosting_http_server_request_duration_count{http_route=\"$route\", http_request_method=\"$method\", http_response_status_code=~\"5..\"}[5m]) or vector(0)) / sum(rate(microsoft_aspnetcore_hosting_http_server_request_duration_count{http_route=\"$route\", http_request_method=\"$method\"}[5m]))",
@@ -414,7 +414,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "aegc6zhggtukgd"
+        "uid": "UHpFOTwHk"
       },
       "description": "",
       "fieldConfig": {
@@ -519,7 +519,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "aegc6zhggtukgd"
+            "uid": "UHpFOTwHk"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -560,7 +560,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "aegc6zhggtukgd"
+        "uid": "UHpFOTwHk"
       },
       "fieldConfig": {
         "defaults": {
@@ -614,7 +614,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "aegc6zhggtukgd"
+            "uid": "UHpFOTwHk"
           },
           "editorMode": "code",
           "expr": "sum by (http_response_status_code) (\r\n    max_over_time(microsoft_aspnetcore_hosting_http_server_request_duration_count{http_route=\"$route\", http_request_method=\"$method\"}[$__rate_interval])\r\n  )",
@@ -629,7 +629,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "aegc6zhggtukgd"
+        "uid": "UHpFOTwHk"
       },
       "description": "",
       "fieldConfig": {
@@ -684,7 +684,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "aegc6zhggtukgd"
+            "uid": "UHpFOTwHk"
           },
           "editorMode": "code",
           "expr": "sum by (url_scheme) (\r\n    max_over_time(microsoft_aspnetcore_hosting_http_server_request_duration_count{job=\"$job\", instance=\"$instance\", http_route=\"$route\", http_request_method=\"$method\"}[$__rate_interval])\r\n  )",
@@ -699,7 +699,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "aegc6zhggtukgd"
+        "uid": "UHpFOTwHk"
       },
       "description": "",
       "fieldConfig": {
@@ -754,7 +754,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "aegc6zhggtukgd"
+            "uid": "UHpFOTwHk"
           },
           "editorMode": "code",
           "expr": "sum by (method_route) (\r\n    label_replace(max_over_time(microsoft_aspnetcore_hosting_http_server_request_duration_count{job=\"$job\", instance=\"$instance\", http_route=\"$route\", http_request_method=\"$method\"}[$__rate_interval]), \"method_route\", \"http/$1\", \"network_protocol_version\", \"(.*)\")\r\n  )",
@@ -784,7 +784,7 @@
         },
         "datasource": {
           "type": "prometheus",
-          "uid": "aegc6zhggtukgd"
+          "uid": "UHpFOTwHk"
         },
         "definition": "label_values(microsoft_aspnetcore_hosting_http_server_active_requests,job)",
         "includeAll": false,
@@ -808,7 +808,7 @@
         },
         "datasource": {
           "type": "prometheus",
-          "uid": "aegc6zhggtukgd"
+          "uid": "UHpFOTwHk"
         },
         "definition": "label_values(microsoft_aspnetcore_hosting_http_server_active_requests{job=~\"$job\"},instance)",
         "includeAll": false,
@@ -833,7 +833,7 @@
         },
         "datasource": {
           "type": "prometheus",
-          "uid": "aegc6zhggtukgd"
+          "uid": "UHpFOTwHk"
         },
         "definition": "label_values(microsoft_aspnetcore_hosting_http_server_request_duration_bucket,http_route)",
         "description": "Route",
@@ -858,7 +858,7 @@
         },
         "datasource": {
           "type": "prometheus",
-          "uid": "aegc6zhggtukgd"
+          "uid": "UHpFOTwHk"
         },
         "definition": "label_values(microsoft_aspnetcore_hosting_http_server_request_duration_bucket,http_request_method)",
         "includeAll": false,

@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Polly;
 using Polly.Extensions.Http;
+using Polly.Retry;
 
 namespace ContactRegister.Application;
 
@@ -25,7 +26,7 @@ public static class DependencyInjection
 		return services;
     }
 
-	private static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
+	private static AsyncRetryPolicy<HttpResponseMessage> GetRetryPolicy()
 	{
 		return HttpPolicyExtensions
 			.HandleTransientHttpError()

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: contactregister-config
+data:
+  ASPNETCORE_ENVIRONMENT: Development
+  ASPNETCORE_HTTP_PORTS: "8080"
+  DOTNET_METRICS_EXPORTER: prometheus
+  CosmosConnection__Database: DevelopmentDatabase
+  DddApiBaseAddress: http://ddd-api:8080
+  MassTransit__NomeFila: fila
+  MassTransit__Servidor: rabbitmq

@@ -48,6 +48,54 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContactRegister.Infrastruct
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContactRegister.Ddd.Tests", "tests\ContactRegister.Ddd.Tests\ContactRegister.Ddd.Tests.csproj", "{10F99D94-E8C7-4FD5-8F26-8CBB8156F1CA}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "k8s", "k8s", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sqlserver", "sqlserver", "{6FEA0028-67C0-43DB-8B31-1AC118AA3664}"
+	ProjectSection(SolutionItems) = preProject
+		sqlserver-configmap.yaml = sqlserver-configmap.yaml
+		sqlserver-deployment.yaml = sqlserver-deployment.yaml
+		sqlserver-persistent-volume-claim.yaml = sqlserver-persistent-volume-claim.yaml
+		sqlserver-secret.yaml = sqlserver-secret.yaml
+		sqlserver-service.yaml = sqlserver-service.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "apis", "apis", "{19739FE6-983E-4E6A-A252-397DD1E8EAB4}"
+	ProjectSection(SolutionItems) = preProject
+		apis-configmap.yaml = apis-configmap.yaml
+		apis-deployment-ddd.yaml = apis-deployment-ddd.yaml
+		apis-deployment-read-contact.yaml = apis-deployment-read-contact.yaml
+		apis-deployment-write-contact.yaml = apis-deployment-write-contact.yaml
+		apis-secret.yaml = apis-secret.yaml
+		apis-service-ddd.yaml = apis-service-ddd.yaml
+		apis-service-read-contact.yaml = apis-service-read-contact.yaml
+		apis-service-write-contact.yaml = apis-service-write-contact.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "rabbitmq", "rabbitmq", "{EE1AF6E7-3149-4CE4-8EF9-08E4F822F82A}"
+	ProjectSection(SolutionItems) = preProject
+		rabbitmq-configmap.yaml = rabbitmq-configmap.yaml
+		rabbitmq-deployment.yaml = rabbitmq-deployment.yaml
+		rabbitmq-secret.yaml = rabbitmq-secret.yaml
+		rabbitmq-persistent-volume-claim.yaml = rabbitmq-persistent-volume-claim.yaml
+		rabbitmq-service.yaml = rabbitmq-service.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "prometheus", "prometheus", "{2B19BC91-DF18-46E9-BD36-DC836AA2DD02}"
+	ProjectSection(SolutionItems) = preProject
+		prometheus-configmap.yaml = prometheus-configmap.yaml
+		prometheus-deployment.yaml = prometheus-deployment.yaml
+		prometheus-persistent-volume-claim.yaml = prometheus-persistent-volume-claim.yaml
+		prometheus-service.yaml = prometheus-service.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "grafana", "grafana", "{C22EDC06-C333-445E-8CF4-95F22A5F81A1}"
+	ProjectSection(SolutionItems) = preProject
+		grafana-deployment.yaml = grafana-deployment.yaml
+		grafana-persistent-volume-claim.yaml = grafana-persistent-volume-claim.yaml
+		grafana-secret.yaml = grafana-secret.yaml
+		grafana-service.yaml = grafana-service.yaml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -124,6 +172,12 @@ Global
 		{6AEED585-34B2-42C3-A642-C752EBBD08C7} = {B268AA47-57A6-4401-8D1D-9FCD1E8783E3}
 		{40F8D64F-5AB7-4DF2-B654-077DD8A4EE8A} = {B268AA47-57A6-4401-8D1D-9FCD1E8783E3}
 		{10F99D94-E8C7-4FD5-8F26-8CBB8156F1CA} = {703622A0-C47B-4686-A6A0-6D731F320914}
+		{02EA681E-C7D8-13C7-8484-4AC65E1B71E8} = {B8738FBC-AD0F-4947-BCB8-7F16C11B6050}
+		{6FEA0028-67C0-43DB-8B31-1AC118AA3664} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{19739FE6-983E-4E6A-A252-397DD1E8EAB4} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{EE1AF6E7-3149-4CE4-8EF9-08E4F822F82A} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{2B19BC91-DF18-46E9-BD36-DC836AA2DD02} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{C22EDC06-C333-445E-8CF4-95F22A5F81A1} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D922AD3F-98BC-4E44-B18A-F1636BB821EB}

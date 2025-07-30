@@ -22,7 +22,7 @@ public class MemCacheService(IMemoryCache cache) : ICacheService
 
 		T newValue = await func();
 
-		if (newValue == null)
+		if (newValue is null)
 			return default;
 
 		var cacheEntryOptions = new MemoryCacheEntryOptions

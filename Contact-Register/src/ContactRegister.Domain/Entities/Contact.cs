@@ -72,12 +72,12 @@ public class Contact : AbstractEntity<int>
         return result;
     }
 
-	private bool ValidateDdd(int? ddd)
+	private static bool ValidateDdd(int? ddd)
 	{
 		return ddd != null && ddd > 10 && ddd < 100 && ddd % 10 > 0;
 	}
 
-	private bool ValidatePhones(Phone? home, Phone? mobile)
+	private static bool ValidatePhones(Phone? home, Phone? mobile)
     {
         return home != null || mobile != null;
     }

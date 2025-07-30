@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ddd-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ddd-api
+  template:
+    metadata:
+      labels:
+        app: ddd-api
+    spec:
+      containers:
+        - name: ddd-api
+          image: mupedeal/contactregister-api-ddd:latest
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: contactregister-config
+          env:
+            - name: CosmosConnection__ConnectionString
+              valueFrom:
+                secretKeyRef:
+                  name: contactregister-secrets
+                  key: CosmosConnection__ConnectionString
+            - name: MassTransit__Usuario
+              valueFrom:
+                secretKeyRef:
+                  name: contactregister-secrets
+                  key: MassTransit__Usuario
+            - name: MassTransit__Senha
+              valueFrom:
+                secretKeyRef:
+                  name: contactregister-secrets
+                  key: MassTransit__Senha

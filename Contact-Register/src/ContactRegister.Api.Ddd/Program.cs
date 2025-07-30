@@ -5,6 +5,7 @@ using ContactRegister.Infrastructure.Ddd.Cache;
 using ContactRegister.Infrastructure.Ddd.Persistence;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Prometheus;
+using ContactRegister.Api.Ddd.Configurations;
 
 namespace ContactRegister.Api.Ddd;
 
@@ -22,6 +23,7 @@ public class Program
 		builder.Services.AddApplication();
 		builder.Services.AddInfrastructure(builder.Configuration);
 		builder.Services.AddMemoryCache();
+		builder.Services.AddMessagingService(builder.Configuration);
 
 		builder.Services.AddMetrics();
 		builder.Services.UseHttpClientMetrics();
