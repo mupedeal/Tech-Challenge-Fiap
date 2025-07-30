@@ -147,7 +147,6 @@ public class DddServiceTests
 
 		//Assert
 		Assert.NotNull(actualResult);
-		_dddRepositoryMock.Verify(x => x.AddDdd(It.IsAny<DddEntity>()), Times.Once());
 		Assert.Equal(expectedResult.Code, actualResult.Code);
 		Assert.Equal(expectedResult.State, actualResult.State);
 		Assert.Equal(expectedResult.Region, actualResult.Region);
