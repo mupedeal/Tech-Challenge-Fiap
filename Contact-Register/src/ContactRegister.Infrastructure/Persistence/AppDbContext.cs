@@ -7,19 +7,19 @@ namespace ContactRegister.Infrastructure.Persistence;
 
 public class AppDbContext : DbContext
 {
-    public DbSet<Contact> contacts { get; set; }
+    public DbSet<Contact> Contacts { get; set; }
     
     public AppDbContext() { }
-    
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+
+	public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+	{
+	}
+
+	protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
         
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
-    }
-
-	public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-    {
     }
 
 	public override int SaveChanges()

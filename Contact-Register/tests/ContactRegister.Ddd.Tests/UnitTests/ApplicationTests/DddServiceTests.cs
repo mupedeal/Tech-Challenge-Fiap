@@ -3,6 +3,7 @@ using ContactRegister.Application.Ddd.Dtos.BrasilApiDtos;
 using ContactRegister.Application.Ddd.Interfaces.Repositories;
 using ContactRegister.Application.Ddd.Interfaces.Services;
 using ContactRegister.Application.Ddd.Services;
+using MassTransit;
 using Microsoft.Extensions.Logging;
 using Moq;
 using DddEntity = ContactRegister.Domain.Entities.Ddd;
@@ -14,11 +15,12 @@ public class DddServiceTests
 	private readonly Mock<ILogger<DddService>> _loggerMock = new();
 	private readonly Mock<IDddRepository> _dddRepositoryMock = new();
 	private readonly Mock<IDddApiService> _dddApiServiceMock = new();
+	private readonly Mock<IBus> _busMock = new();
 	private readonly DddService _dddService;
 
 	public DddServiceTests()
 	{
-		_dddService = new(_loggerMock.Object, _dddRepositoryMock.Object, _dddApiServiceMock.Object);
+		_dddService = new(_loggerMock.Object, _dddRepositoryMock.Object, _dddApiServiceMock.Object, _busMock.Object);
 	}
 
 	[Fact]
@@ -138,14 +140,15 @@ public class DddServiceTests
 		};
 		_dddRepositoryMock.Setup(x => x.GetDddByCode(It.IsAny<int>())).ReturnsAsync(dbResult);
 		_dddApiServiceMock.Setup(x => x.GetByCode(It.IsAny<int>())).ReturnsAsync(apiResult);
-		_dddRepositoryMock.Setup(x => x.AddDdd(It.IsAny<DddEntity>())).ReturnsAsync(1).Verifiable();
+
+		var sendEndpointMock = new Mock<ISendEndpoint>();
+		_busMock.Setup(x => x.GetSendEndpoint(It.IsAny<Uri>())).ReturnsAsync(sendEndpointMock.Object);
 
 		//Act
 		var actualResult = (await _dddService.GetDddByCode(code)).Value;
 
 		//Assert
 		Assert.NotNull(actualResult);
-		_dddRepositoryMock.Verify(x => x.AddDdd(It.IsAny<DddEntity>()), Times.Once());
 		Assert.Equal(expectedResult.Code, actualResult.Code);
 		Assert.Equal(expectedResult.State, actualResult.State);
 		Assert.Equal(expectedResult.Region, actualResult.Region);

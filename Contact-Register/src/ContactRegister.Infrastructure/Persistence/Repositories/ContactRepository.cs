@@ -6,13 +6,13 @@ namespace ContactRegister.Infrastructure.Persistence.Repositories;
 
 public class ContactRepository : IContactRepository
 {
-    private DbSet<Contact> _contacts;
+    private readonly DbSet<Contact> _contacts;
     private readonly AppDbContext _context;
 
     public ContactRepository(AppDbContext context)
     {
         _context = context;
-        _contacts = context.contacts;
+        _contacts = context.Contacts;
     }
     
     public async Task AddContactAsync(Contact contact)

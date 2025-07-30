@@ -1,6 +1,4 @@
-﻿using ContactRegister.Application.Ddd.Dtos;
-using ContactRegister.Application.Ddd.Interfaces.Services;
-using ErrorOr;
+﻿using ContactRegister.Application.Ddd.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ContactRegister.Api.Ddd.Controllers;

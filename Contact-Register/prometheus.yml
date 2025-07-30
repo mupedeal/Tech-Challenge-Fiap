@@ -5,9 +5,7 @@ scrape_configs:
   - job_name: 'contact-register-api-1'
     metrics_path: '/metrics'
     static_configs:
-      - targets: 
-          [
-            'contact-register-read-contact-api-1:8080',
-            'contact-register-write-contact-api-1:8080',
-            'contact-register-ddd-api-1:8080'
-          ]
+      - targets:
+          - 'ddd-api:8080'
+          - 'read-contact-api:8080'
+          - 'write-contact-api:8080'

@@ -2,6 +2,7 @@
 using ContactRegister.Application.Ddd.Interfaces.Repositories;
 using ContactRegister.Application.Ddd.Interfaces.Services;
 using ErrorOr;
+using MassTransit;
 using Microsoft.Extensions.Logging;
 using DddEntity = ContactRegister.Domain.Entities.Ddd;
 
@@ -12,12 +13,14 @@ public class DddService : IDddService
 	private readonly ILogger<DddService> _logger;
 	private readonly IDddRepository _dddRepository;
 	private readonly IDddApiService _dddApiService;
+	private readonly IBus _bus;
 
-	public DddService(ILogger<DddService> logger, IDddRepository dddRepository, IDddApiService dddApiService)
+	public DddService(ILogger<DddService> logger, IDddRepository dddRepository, IDddApiService dddApiService, IBus bus)
 	{
 		_logger = logger;
 		_dddRepository = dddRepository;
 		_dddApiService = dddApiService;
+		_bus = bus;
 	}
 
 	public async Task<ErrorOr<List<DddDto>>> GetDdd()
@@ -56,7 +59,9 @@ public class DddService : IDddService
 							.ToList();
 					}
 
-					_ = await _dddRepository.AddDdd(ddd);
+					var endpoint = await _bus.GetSendEndpoint(new Uri("queue:fila"));
+
+					await endpoint.Send(ddd);
 				}
 
 				if (dddApiResponseDto.Error != null)

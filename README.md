@@ -1,225 +1,42 @@
-# How to Run the Application
+1 - faça o clone do repositório
 
-This section provides instructions on how to build and run the application using Docker and Docker Compose. By following these steps, you'll have the application and an SQL Server database running in containers on your local machine.
+2 - navegue até a pasta raiz do projeto
 
-## Prerequisites
+3 - crie os repositórios no dockerhub
+mupedeal/contactregister-api-ddd
+mupedeal/contactregister-api-readcontact
+mupedeal/contactregister-api-writecontact
 
-- **Docker**: Ensure that Docker is installed and running on your system.
-  - [Install Docker Desktop](https://www.docker.com/products/docker-desktop) for your operating system.
-- **Docker Compose**: Comes bundled with Docker Desktop. No additional installation is required.
+4 - faça o build das imagens
+docker build --no-cache -f src/ContactRegister.Api.Ddd/Dockerfile -t mupedeal/contactregister-api-ddd:latest . && docker build --no-cache -f src/ContactRegister.Api.ReadContact/Dockerfile -t mupedeal/contactregister-api-readcontact:latest . && docker build --no-cache -f src/ContactRegister.Api.WriteContact/Dockerfile -t mupedeal/contactregister-api-writecontact:latest .
 
-## Steps to Run the Application
+5 - publique as imagens no dockerhub
+docker push mupedeal/contactregister-api-ddd:latest && docker push mupedeal/contactregister-api-readcontact:latest && docker push mupedeal/contactregister-api-writecontact:latest
 
-### 1. Clone the Repository
+6 - crie o banco de dados*
+kubectl apply -f sqlserver-secret.yaml && kubectl apply -f sqlserver-configmap.yaml && kubectl apply -f sqlserver-persistent-volume-claim.yaml && kubectl apply -f sqlserver-deployment.yaml && kubectl apply -f sqlserver-service.yaml
 
-First, clone the repository to your local machine:
+* não esqueça de alterar a imagem utilizada nos arquivos *-deployment.yaml
 
-```bash
-git clone https://github.com/lufelipe111/Tech-Challenge-Fase-1.git
-```
+7 - crie o cosmos db
+essa aplicação usa o cosmos db; crie e adicione a connection string em CosmosConnection__ConnectionString no arquivo apis-secret.yaml, o nome do database está em apis-configmap.yaml; será criado o container "ddds" dentro do db
 
-### 2. Navigate to the Project Directory
+8 - crie o rabbitmq
+kubectl apply -f rabbitmq-secret.yaml && kubectl apply -f rabbitmq-configmap.yaml && kubectl apply -f rabbitmq-persistent-volume-claim.yaml && kubectl apply -f rabbitmq-deployment.yaml && kubectl apply -f rabbitmq-service.yaml
 
-Change your working directory to the root of the cloned repository:
+9 - crie as apis
+kubectl apply -f apis-secret.yaml && kubectl apply -f apis-configmap.yaml && kubectl apply -f apis-deployment-ddd.yaml && kubectl apply -f apis-deployment-read-contact.yaml && kubectl apply -f apis-deployment-write-contact.yaml && kubectl apply -f apis-service-ddd.yaml && kubectl apply -f apis-service-read-contact.yaml && kubectl apply -f apis-service-write-contact.yaml
 
-```bash
-cd Contact-Register
-```
+10 - verifique
+kubectl get secret,cm,pv,pvc,deployment,pods,svc
 
-### 3. Build and Run with Docker Compose
+11 - crie o prometheus
+kubectl apply -f prometheus-configmap.yaml && kubectl apply -f prometheus-persistent-volume-claim.yaml && kubectl apply -f prometheus-deployment.yaml && kubectl apply -f prometheus-service.yaml
 
-Use Docker Compose to build the Docker images and start the containers:
+12 - crie o grafana
+kubectl apply -f grafana-secret.yaml && kubectl apply -f grafana-persistent-volume-claim.yaml && kubectl apply -f grafana-deployment.yaml && kubectl apply -f grafana-service.yaml
 
-```bash
-docker-compose up --build
-```
+13 - importar o dashboard do grafana
+importar o arquivo contact-register-grafana-dashboard.json para o grafana via interface web
 
-This command does the following:
-
-- **Builds** the Docker image for the application using the provided `Dockerfile`.
-- **Starts** the containers defined in the `docker-compose.yml` file:
-  - **Application Container**: Runs the .NET 8 API.
-  - **SQL Server Container**: Hosts the SQL Server database.
-
-### 4. Verify the Containers are Running
-
-Once Docker Compose finishes building and starting the containers, you should see logs indicating that both the application and SQL Server are running.
-
-To list the running containers, open a new terminal window and run:
-
-```bash
-docker ps
-```
-
-You should see entries for both the application and the SQL Server containers.
-
-### 5. Access the Application
-
-The application documentation should now be accessible at `http://localhost:8080/swagger`.
-
-- **API Endpoints**: You can interact with the API endpoints using tools like `curl`, Postman, or your web browser.
-
-  For example, to get all contacts:
-
-  ```bash
-  curl -X 'GET' \
-  'http://localhost:8080/Contact/GetContacts?dddCode=0&skip=0&take=50' \
-  -H 'accept: */*'
-  ```
-
-### 6. Stopping the Application
-
-To stop the containers, press `Ctrl+C` in the terminal where Docker Compose is running. Then, to ensure all containers are stopped and resources are cleaned up, run:
-
-```bash
-docker-compose down
-```
-
-This command stops and removes the containers, networks, and volumes created by `docker-compose up`.
-
-## Additional Commands and Information
-
-### Running in Detached Mode
-
-To run the containers in the background (detached mode), use:
-
-```bash
-docker-compose up --build -d
-```
-
-### Rebuilding the Images
-
-If you make changes to the code and need to rebuild the images, run:
-
-```bash
-docker-compose up --build
-```
-
-### Viewing Logs
-
-To view the logs from the running containers:
-
-```bash
-docker-compose logs -f
-```
-
-To view logs for a specific service (e.g., the application):
-
-```bash
-docker-compose logs -f Contact.Register.Api
-```
-
-### Accessing the SQL Server Database
-
-You can connect to the SQL Server instance using SQL Server Management Studio (SSMS) or any other SQL client.
-
-- **Server**: `localhost:1433`
-- **Username**: `sa`
-- **Password**: `Password@1234`
-
-Ensure that the SQL client is configured to allow connections to localhost on port 1433.
-
-### Applying Database Migrations Manually
-
-If you need to apply migrations manually, you can execute the following commands inside the application container.
-
-First, get the container ID or name:
-
-```bash
-docker ps
-```
-
-Then, access the container's shell:
-
-```bash
-docker exec -it <container_id_or_name> /bin/bash
-```
-
-Once inside the container, navigate to the application's directory and run:
-
-```bash
-dotnet ef database update
-```
-
-### Cleaning Up Docker Resources
-
-To remove all stopped containers, unused networks, and dangling images, you can run:
-
-```bash
-docker system prune
-```
-
-## Troubleshooting
-
-- **Port Conflicts**: If port `5000` is already in use, you can change the port mapping in the `docker-compose.yml` file:
-
-  ```yaml
-  services:
-    Contact.Register.Api:
-      ports:
-        - '<your_desired_port>:80'
-  ```
-
-  Replace `your_desired_port` with an available port number.
-
-- **Database Connection Issues**: Ensure that the SQL Server container is running and healthy. Check the logs for any errors:
-
-  ```bash
-  docker-compose logs sqlserver
-  ```
-
-- **Docker Not Running**: Ensure that Docker Desktop is running. The Docker daemon must be active to build images and run containers.
-
-- **Permission Issues on Linux/macOS**: You might need to adjust file permissions or run commands with `sudo` if you encounter permission errors.
-
-## Optional: Running Without Docker
-
-If you prefer to run the application without Docker, follow these steps:
-
-### Prerequisites
-
-- **.NET 8 SDK**: Install from the [.NET Download page](https://dotnet.microsoft.com/download/dotnet/8.0).
-- **SQL Server**: Install SQL Server locally or use a remote instance.
-- **EF Core Tools**: Install the Entity Framework Core tools:
-
-  ```bash
-  dotnet tool install --global dotnet-ef
-  ```
-
-### Steps
-
-1. **Set Up the Database**:
-
-   - Update the `ConnectionStrings` in `appsettings.json` or `appsettings.Development.json` with your SQL Server instance details.
-   - Apply migrations to create the database schema:
-
-     ```bash
-     dotnet ef database update --project src/Contact.Register.Infrastructure --startup-project src/Contact.Register.Api
-     ```
-
-2. **Restore Dependencies**:
-
-   ```bash
-   dotnet restore
-   ```
-
-3. **Build the Solution**:
-
-   ```bash
-   dotnet build
-   ```
-
-4. **Run the Application**:
-
-   ```bash
-   dotnet run --project src/Contact.Register.Api
-   ```
-
-5. **Access the Application**:
-
-   The application will be running at `https://localhost:5001` or `http://localhost:5000` by default.
-
-## Notes
-
-- **Environment Variables**: When running without Docker, ensure that any required environment variables are set or configured in the `appsettings` files.
-- **HTTPS Configuration**: By default, the application runs with HTTPS enabled when not using Docker. You might need to trust the local development certificate. For more information, see [Enforce HTTPS in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/security/enforcing-ssl).
+* ajustar o source do dashboard
